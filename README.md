@@ -77,4 +77,5 @@
 Команда SELECT имеет предложение FOR UPDATE, которое позволяет заблокировать отдельные строки таблицы с целью их последующего обновления.  
 `SELECT * FROM table WHERE column_name ~ 'some text' FOR UPDATE;`  
 
-
+____  
+![Документация PostgreSQL на русском](https://postgrespro.ru/docs/postgresql/16/index)  
