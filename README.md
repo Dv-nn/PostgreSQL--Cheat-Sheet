@@ -6,12 +6,84 @@
 - `postgres` представляет собой обычную базу данных, которую можно использовать по своему усмотрению
     
 ![](https://github.com/Dv-nn/PostgreSQL/blob/main/img/img.PNG)  
+____  
+> $ createdb mydb  - создания базы данных
 
+> $ dropdb mydb    - удалить базу данных  
 
+*Cоздание таблицы*  
+> CREATE TABLE name_table (  
+>   city            varchar(80),  
+>   temp_lo         int,     -- comment    
+>    prcp           real,             
+>    date           date    
+> );    
 
+*Удаление таблицы*  
+> DROP TABLE name_table;  
 
+PostgreSQL поддерживает стандартные типы SQL: int, smallint, real, double precision, char(N), varchar(N), date, time, timestamp и interval, а также др.  
+PostgreSQL можно расширять, создавая набор собственных типов данных.  
 
+*Добавление строк в таблицу*   
+> INSERT INTO name_table (city, temp_lo, temp_hi, prcp, date)  
+> VALUES ('San Francisco', 43, 57, 0.0, '1994-11-29');  
 
+*Выполнение запроса* 
+> SELECT * FROM weather  
+> WHERE city = 'San Francisco' AND prcp > 0.0;  --указывается логическое выражение (проверка истинности), которое служит фильтром строк   
+
+> SELECT * FROM weather  
+> ORDER BY city;  --порядок сортировки   
+
+> SELECT DISTINCT city   --убрать дублирующиеся строки  
+> FROM weather;  
+
+*Соединения таблиц*  
+> SELECT *
+    FROM weather w JOIN cities c ON w.city = c.name;
+
+*Агрегатные функции*  
+ count (количество)  
+ sum (сумму)  
+ avg (среднее)  
+ max (максимум)  
+ min (минимум)  
+
+ *Изменение данных*  
+> UPDATE weather  
+> SET temp_hi = temp_hi - 2
+> WHERE date > '1994-11-28';
+
+*Удаление данных* 
+> DELETE FROM weather WHERE city = 'Hayward';
+____  
+*Транзакции*  
+Транзакция — объединяет последовательность действий в одну операцию «всё или ничего».  
+> BEGIN;  
+> UPDATE accounts SET balance = balance - 100.00  
+>    WHERE name = 'Alice';  
+> -- ...  
+> COMMIT;  --блок транзакции
+
+> BEGIN;  
+> UPDATE accounts SET balance = balance - 100.00  
+>    WHERE name = 'Alice';  
+> SAVEPOINT my_savepoint;  --точки сохранения    
+> UPDATE accounts SET balance = balance + 100.00  
+>    WHERE name = 'Bob';  
+> -- ошибочное действие... забыть его и использовать счёт Уолли  
+> ROLLBACK TO my_savepoint;  --возврат    
+> UPDATE accounts SET balance = balance + 100.00  
+>    WHERE name = 'Wally';  
+> COMMIT;  
+
+*Оконные функции*   
+Оконная функция выполняет вычисления для набора строк, некоторым образом связанных с текущей строкой.  
+Вызов оконной функции всегда содержит предложение OVER. Предложение PARTITION BY разделяет строки по группам.  
+> SELECT depname, empno, salary, avg(salary) OVER (PARTITION BY depname)    
+>  FROM empsalary;    
+____  
 ### Нормализация  
 *Нормализация* это процесс приведения базы данных к нормальным формам с целью избавления от логической избыточности.    
 ### Транзакция  
@@ -78,4 +150,4 @@
 `SELECT * FROM table WHERE column_name ~ 'some text' FOR UPDATE;`  
 
 ____  
-![Документация PostgreSQL на русском](https://postgrespro.ru/docs/postgresql/16/index)  
+[Документация PostgreSQL на русском](https://postgrespro.ru/docs/postgresql/16/index)    
